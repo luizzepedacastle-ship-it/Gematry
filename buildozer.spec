@@ -1,28 +1,49 @@
 [app]
-title = Gematria
+# =========================
+# INFORMACIÓN DE LA APP
+# =========================
+title = Gematría
 package.name = gematria
-package.domain = org.luizzepeda
+package.domain = org.luiz
 
+# =========================
+# CÓDIGO FUENTE
+# =========================
 source.dir = .
 source.include_exts = py
 
+# =========================
+# VERSIÓN
+# =========================
 version = 0.1
 
-requirements = python3==3.10,kivy
+# =========================
+# DEPENDENCIAS (UNA SOLA VEZ)
+# =========================
+requirements = python3,kivy
 
+# =========================
+# ORIENTACIÓN / UI
+# =========================
 orientation = portrait
 fullscreen = 0
 
-android.permissions = INTERNET
+# =========================
+# ANDROID
+# =========================
 android.api = 33
 android.minapi = 26
 android.build_tools_version = 33.0.2
 android.ndk = 25b
-requirements = python3,kivy
 
-# NO fijar ndk a menos que sea necesario
-# android.ndk = r25c
+android.permissions = INTERNET
 
-[buildozer]
+# =========================
+# LOGS
+# =========================
 log_level = 2
 warn_on_root = 1
+
+# =========================
+# FIN
+# =========================
