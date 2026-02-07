@@ -1,14 +1,14 @@
 [app]
 title = Gematria
 package.name = gematria
-package.domain = org.luiz
+package.domain = org.luizzepeda
 
 source.dir = .
 source.include_exts = py
 
 version = 0.1
 
-requirements = python3,kivy
+requirements = python3==3.10,kivy
 
 orientation = portrait
 fullscreen = 0
@@ -16,7 +16,9 @@ fullscreen = 0
 android.permissions = INTERNET
 android.api = 33
 android.minapi = 26
-android.ndk = 25b
+
+# NO fijar ndk a menos que sea necesario
+# android.ndk = r25c
 
 [buildozer]
 log_level = 2
