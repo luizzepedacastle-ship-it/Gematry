@@ -18,6 +18,7 @@ android.api = 33
 android.minapi = 26
 android.build_tools_version = 33.0.2
 android.ndk = 25b
+requirements = python3,kivy
 
 # NO fijar ndk a menos que sea necesario
 # android.ndk = r25c
