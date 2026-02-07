@@ -1,54 +1,84 @@
-name: Android Build (Kivy)
+name: Android APK (Kivy)
 
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
+    # ---------------------------
+    # Dependencias del sistema
+    # ---------------------------
     - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y \
-         python3 \
-         python3-pip \
-         python3-setuptools \
+          python3 \
+          python3-pip \
+          python3-setuptools \
           python3-wheel \
-         cython3 \
-         git \
-         unzip \
-        zip \
-        openjdk-17-jdk
-        
+          python3-venv \
+          openjdk-17-jdk \
+          unzip \
+          zip \
+          git \
+          cython3 \
+          libffi-dev \
+          libssl-dev
 
+    # ---------------------------
+    # Python & Buildozer
+    # ---------------------------
     - name: Install Buildozer
       run: |
-        pip install --upgrade pip
-        pip install buildozer
+        pip3 install --upgrade pip
+        pip3 install buildozer
 
-    - name: Prepare Android SDK
+    # ---------------------------
+    # Android SDK setup
+    # ---------------------------
+    - name: Set ANDROID_HOME
       run: |
-        mkdir -p ~/.android
-        echo "y" | sdkmanager --licenses || true
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
 
-    - name: Build APK
+    - name: Download Android SDK cmdline-tools
+      run: |
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+        unzip commandlinetools-linux-11076708_latest.zip
+        mv cmdline-tools latest
+
+    - name: Install Android SDK packages
+      run: |
+        yes | sdkmanager --licenses || true
+        sdkmanager \
+          "platform-tools" \
+          "platforms;android-33" \
+          "build-tools;33.0.2"
+
+    # ---------------------------
+    # Build APK
+    # ---------------------------
+    - name: Build APK with Buildozer
       run: |
         buildozer android debug
 
-    - name: Upload APK
+    # ---------------------------
+    # Upload APK
+    # ---------------------------
+    - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: gematria-apk
         path: bin/*.apk
-
