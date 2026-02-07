@@ -1,4 +1,5 @@
 [app]
+
 title = Gematria
 package.name = gematria
 package.domain = org.luiz
@@ -17,10 +18,13 @@ android.permissions = INTERNET
 android.api = 33
 android.minapi = 26
 android.ndk = 25b
-android.sdk = 33
-android.build_tools_version = 33.0.2
+
 android.accept_sdk_license = True
 
+log_level = 2
+
+
 [buildozer]
+
 log_level = 2
 warn_on_root = 1
