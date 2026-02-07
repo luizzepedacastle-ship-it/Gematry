@@ -1,36 +1,45 @@
-name: Build Android APK
+name: Android Build (Kivy)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y \
-          python3-pip \
           openjdk-17-jdk \
-          unzip \
-          zip \
-          git \
-          build-essential \
-          libssl-dev \
+          zip unzip \
           libffi-dev \
-          libsqlite3-dev \
-          zlib1g-dev
+          libssl-dev \
+          build-essential \
+          python3-pip \
+          python3-setuptools \
+          python3-wheel \
+          cython
 
-    - name: Install buildozer
+    - name: Install Buildozer
       run: |
-        pip3 install --upgrade pip
-        pip3 install buildozer cython
+        pip install --upgrade pip
+        pip install buildozer
+
+    - name: Prepare Android SDK
+      run: |
+        mkdir -p ~/.android
+        echo "y" | sdkmanager --licenses || true
 
     - name: Build APK
       run: |
@@ -39,5 +48,6 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: Gematria-APK
+        name: gematria-apk
         path: bin/*.apk
+
