@@ -1,0 +1,43 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          python3-pip \
+          openjdk-17-jdk \
+          unzip \
+          zip \
+          git \
+          build-essential \
+          libssl-dev \
+          libffi-dev \
+          libsqlite3-dev \
+          zlib1g-dev
+
+    - name: Install buildozer
+      run: |
+        pip3 install --upgrade pip
+        pip3 install buildozer cython
+
+    - name: Build APK
+      run: |
+        buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Gematria-APK
+        path: bin/*.apk
